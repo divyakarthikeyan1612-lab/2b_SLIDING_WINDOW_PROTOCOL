@@ -1,5 +1,6 @@
 # 2b IMPLEMENTATION OF SLIDING WINDOW PROTOCOL
 ## AIM
+To implement the Sliding Window Protocol using Python to transmit multiple frames from the client to the server and receive acknowledgements (ACK) from the server.
 ## ALGORITHM:
 1. Start the program.
 2. Get the frame size from the user
@@ -8,6 +9,52 @@
 5. If your frames reach the server it will send ACK signal to client
 6. Stop the Program
 ## PROGRAM
+1)Server
+```
+
+import socket
+s = socket.socket() 
+s.bind(('localhost', 8000)) 
+s.listen(1) 
+print("Waiting for connection...")
+conn, addr = s.accept()
+print("Connected to", addr)
+while True:
+  data = conn.recv(1024).decode() 
+  if not data: 
+    break 
+  print("Frames received:", data) 
+  ack = "ACK for " + data 
+  conn.send(ack.encode()) 
+conn.close()
+```
+2)Client
+```
+import socket 
+s = socket.socket() 
+s.connect(('localhost', 8000)) 
+n = int(input("Enter number of frames: ")) 
+w = int(input("Enter window size: ")) 
+frames = list(range(1, n+1)) 
+i = 0 
+while i < n: 
+    send_frames = frames[i:i+w] 
+    msg = " ".join(map(str, send_frames)) 
+    print("Sending frames:", msg) 
+    s.send(msg.encode()) 
+    ack = s.recv(1024).decode() 
+    print("Received:", ack) 
+    i += w 
+s.close()
+```
+
+
+
 ## OUPUT
+1) Server
+   <img width="1217" height="786" alt="image" src="https://github.com/user-attachments/assets/bed8ebbb-0b13-4508-8da4-1f2e9a99b148" />
+2)Client
+<img width="1217" height="808" alt="image" src="https://github.com/user-attachments/assets/7bb10069-7493-4e97-b35b-034fa23d2603" />
+
 ## RESULT
-Thus, python program to perform stop and wait protocol was successfully executed
+Thus, the Python program to implement the Sliding Window Protocol was successfully executed, and the transmission of frames with acknowledgements between the client and server was verified.
